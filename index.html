@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nosso Aniversário ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rosa: #ffafcc;
+            --vermelho: #d00000;
+            --branco: #ffffff;
+            --vinho: #6a040f;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--rosa);
+            overflow: hidden;
+            color: var(--vinho);
+            height: 100vh;
+            width: 100vw;
+            font-family: 'Arial', sans-serif;
+        }
+
+        h1, h3, .romantic-text { 
+            font-family: 'Caveat', cursive; 
+            line-height: 1;
+        }
+
+        h1 { font-size: 3rem; }
+        h3 { font-size: 1.8rem; margin-bottom: 5px; }
+
+        /* --- Telas --- */
+        .screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: opacity 0.8s ease-in-out;
+            padding: 20px;
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .active { visibility: visible; opacity: 1; z-index: 10; }
+
+        /* --- Botões --- */
+        .btn {
+            background: var(--vermelho);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 9999;
+            pointer-events: auto !important;
+        }
+
+        /* Botão de Revelação */
+        #finalGalleryBtn {
+            display: none;
+            opacity: 0;
+            margin-top: 20px;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+
+        #finalGalleryBtn.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Baralho de Fotos --- */
+        .deck-container {
+            width: 280px;
+            height: 380px;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0; left: 0;
+            border-radius: 15px;
+            background-size: cover;
+            background-position: center;
+            border: 6px solid white;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: flex-end;
+            transition: transform 0.6s ease, opacity 0.6s ease;
+            cursor: pointer;
+        }
+
+        .card-text-bg {
+            background: rgba(255, 255, 255, 0.9);
+            width: 100%;
+            padding: 12px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .romantic-text { color: var(--vermelho); font-size: 1.8rem; font-weight: 700; }
+
+        .card.swiped {
+            transform: translateX(180%) rotate(40deg) !important;
+            opacity: 0;
+        }
+
+        .instructions { font-size: 0.9rem; margin-bottom: 15px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        /* --- Mapas / Street View --- */
+        .map-container { width: 100%; height: 100%; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .map-caption {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 20px;
+            width: 85%;
+            z-index: 10000;
+            pointer-events: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <section id="screen1" class="screen active">
+        <h1>Para Fernanda meu amor ❤️</h1>
+        <p style="margin: 20px 0;">Aumente o volume</p>
+        <button class="btn" onclick="startApp()">Começar Jornada</button>
+    </section>
+
+    <section id="screen2" class="screen">
+        <div style="font-size: 80px; cursor: pointer;" onclick="openGift()">🎁</div>
+        <p>Toque no presente</p>
+    </section>
+
+    <section id="screen3" class="screen">
+        <p id="instr" class="instructions">👆 Toque na foto para ver a próxima</p>
+        <div id="deck-container" class="deck-container" onclick="swipeTopCard()"></div>
+        <button id="finalGalleryBtn" class="btn" onclick="nextStep(4)">Nossa História ➔</button>
+    </section>
+
+    <section id="screen4" class="screen" style="padding:0">
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!4v1766800362164!6m8!1m7!1sCAoSF0NJSE0wb2dLRUlDQWdJRDhoZTZIX0FF!2m2!1d-22.92839827060957!2d-43.33377479868831!3f136.94912085278384!4f5.089460503135953!5f0.7820865974627469"></iframe>
+            <div class="map-caption">
+                <h3>Onde tudo começou</h3>
+                <button class="btn" onclick="nextStep(5)">Próximo</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="screen5" class="screen" style="padding:0">
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!4v1766800502858!6m8!1m7!1sjY-E8KHbtSLsZljb8BX0tA!2m2!1d-23.00624862327112!2d-43.31369834539458!3f3.351612503262757!4f6.56856469241589!5f0.7820865974627469"></iframe>
+            <div class="map-caption">
+                <h3>Onde tomei coragem e dei um passo</h3>
+                <button class="btn" onclick="nextStep(6)">Próximo</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="screen6" class="screen" style="padding:0">
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!4v1766800558137!6m8!1m7!1s_pOElfat2qVoQn2yAXWfxQ!2m2!1d-23.01020734381481!2d-43.34508963835894!3f13.414073412780727!4f1.7143673585566859!5f0.7820865974627469"></iframe>
+            <div class="map-caption">
+                <h3>Onde tomei a melhor decisão</h3>
+                <button class="btn" onclick="nextStep(7)">Próximo</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="screen7" class="screen" style="padding:0">
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!4v1766801091665!6m8!1m7!1sCAoSFkNJSE0wb2dLRUlDQWdJREU5WnYwSnc.!2m2!1d-22.95608952270947!2d-43.26627398166544!3f358.1439423552241!4f-6.167847905857371!5f0.7820865974627469"></iframe>
+            <div class="map-caption">
+                <h3>Onde vai continuar... para sempre</h3>
+                <button class="btn" onclick="nextStep(8)">Finalizar</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="screen8" class="screen" style="background: white;">
+        <h1 style="font-size: 5rem; color: var(--vermelho);">Te amo! ❤️</h1>
+    </section>
+
+    <script>
+        const cardData = [
+            { img: 'foto1.jpg', text: "Você é única, em cada detalhe" },
+            { img: 'foto2.jpg', text: "Você me faz tão bem." },
+            { img: 'foto3.jpg', text: "Você me torna um homem melhor." },
+            { img: 'foto4.jpg', text: "Você faz minha vida especial demais." },
+            { img: 'foto5.jpg', text: "Minha Baixinha" }
+        ];
+
+        function startApp() {
+            document.getElementById('bgMusic').play().catch(e => console.log("Áudio aguardando..."));
+            nextStep(2);
+        }
+
+        function nextStep(step) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen' + step).classList.add('active');
+        }
+
+        function openGift() {
+            nextStep(3);
+            createDeck();
+        }
+
+        function createDeck() {
+            const container = document.getElementById('deck-container');
+            container.innerHTML = '';
+            [...cardData].reverse().forEach((data, i) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.backgroundImage = `url('${data.img}')`;
+                card.style.zIndex = i;
+                card.innerHTML = `<div class="card-text-bg"><p class="romantic-text">${data.text}</p></div>`;
+                container.appendChild(card);
+            });
+        }
+
+        function swipeTopCard() {
+            const cards = document.querySelectorAll('.card:not(.swiped)');
+            if (cards.length > 0) {
+                cards[cards.length - 1].classList.add('swiped');
+                
+                // Quando a última foto for jogada, mostra o botão de passar
+                if (cards.length === 1) {
+                    setTimeout(() => {
+                        document.getElementById('instr').style.display = 'none';
+                        document.getElementById('finalGalleryBtn').classList.add('show');
+                    }, 600);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
